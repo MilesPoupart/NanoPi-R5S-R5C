@@ -34,6 +34,16 @@ git clone --depth=1 https://github.com/Lienol/openwrt-package
 rm -rf openwrt-package/verysync
 rm -rf openwrt-package/luci-app-verysync
 
+# Add luci-app-netdata
+rm -rf ../../customfeeds/luci/applications/luci-app-netdata
+git clone --depth=1 https://github.com/sirpdboy/luci-app-netdata
+
+# Add luci-app-partexp
+git clone --depth=1 https://github.com/sirpdboy/luci-app-partexp
+
+# Add luci-app-netspeedtest
+git clone --depth=1 https://github.com/sirpdboy/NetSpeedTest
+
 # Add luci-app-adguardhome
 svn export https://github.com/Lienol/openwrt-package/branches/other/luci-app-adguardhome
 
@@ -128,9 +138,13 @@ popd
 sed -i 's/\/bin\/ash/\/usr\/bin\/zsh/g' package/base-files/files/etc/passwd
 
 # Modify default IP
-sed -i 's/192.168.1.1/192.168.11.1/g' package/base-files/files/bin/config_generate
+sed -i 's/192.168.1.1/192.168.3.1/g' package/base-files/files/bin/config_generate
+sed -i '/uci commit system/i\uci set system.@system[0].hostname='MagicWrt'' package/lean/default-settings/files/zzz-default-settings
+sed -i "s/OpenWrt /MilesPoupart @ MagicWrt /g" package/lean/default-settings/files/zzz-default-settings
 
-# Test kernel 5.15
+echo -e " MilesPoupart's MagicWrt built on "$(date +%Y.%m.%d)"\n -----------------------------------------------------" >> package/base-files/files/etc/banner
+
+# Test kernel 6.1
 sed -i 's/5.4/6.1/g' ./target/linux/rockchip/Makefile
 rm -rf target/linux/rockchip/image/armv8.mk
 cp -f $GITHUB_WORKSPACE/armv8.mk target/linux/rockchip/image/armv8.mk
