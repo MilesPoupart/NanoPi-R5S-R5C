@@ -6,7 +6,7 @@
 # Blog: https://p3terx.com
 #=================================================
 
-name: NanoPi-R5S-R5C-全插件
+name: NanoPi-R5S-R5C-plus
 
 on:
   repository_dispatch:
