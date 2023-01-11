@@ -28,7 +28,7 @@ env:
 jobs:
   Build:
     runs-on: self-hosted
-    if: github.repository == 'MilesPoupart/NanoPi-R5S-R5C'
+    permissions: write-all
     outputs:
       OPENWRTROOT: ${{ steps.update.outputs.OPENWRTROOT }}
       PLATFORM: ${{ steps.compile.outputs.PLATFORM }}
