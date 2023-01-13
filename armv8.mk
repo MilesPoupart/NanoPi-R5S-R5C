@@ -118,7 +118,7 @@ define Device/friendlyarm_nanopi-r5s
   SOC := rk3568
   UBOOT_DEVICE_NAME := nanopi-r5s-rk3568
   IMAGE/sysupgrade.img.gz := boot-common | boot-script nanopi-r5s | pine64-img | gzip | append-metadata
-  DEVICE_PACKAGES := kmod-r8125 kmod-nvme kmod-scsi-core kmod-mt7921e kmod-usb-serial-cp210x wpad-openssl
+  DEVICE_PACKAGES := kmod-r8125 kmod-nvme kmod-scsi-core kmod-mt7921e kmod-usb-serial-cp210x wpad-openssl kmod-crypto-gcm
 endef
 TARGET_DEVICES += friendlyarm_nanopi-r5s
 
@@ -128,7 +128,7 @@ define Device/friendlyarm_nanopi-r5c
   SOC := rk3568
   UBOOT_DEVICE_NAME := nanopi-r5c-rk3568
   IMAGE/sysupgrade.img.gz := boot-common | boot-script nanopi-r5s | pine64-img | gzip | append-metadata
-  DEVICE_PACKAGES := kmod-ata-ahci-platform kmod-mt7921e kmod-r8125 kmod-usb-serial-cp210x wpad-openssl
+  DEVICE_PACKAGES := kmod-ata-ahci-platform kmod-mt7921e kmod-r8125 kmod-usb-serial-cp210x wpad-openssl kmod-crypto-gcm
 endef
 TARGET_DEVICES += friendlyarm_nanopi-r5c
 
