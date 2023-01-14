@@ -17,8 +17,8 @@ on:
   #   types: started
 
 env:
-  REPO_URL: https://github.com/coolsnowwolf/lede
-  REPO_BRANCH: master
+  REPO_URL: https://github.com/DHDAXCW/lede-rockchip
+  REPO_BRANCH: stable
   CONFIG_FILE: configs/lean/lean.config
   DIY_SH: scripts/lean.sh
   KMODS_IN_FIRMWARE: true
@@ -58,10 +58,6 @@ jobs:
         df -hT $PWD
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         cd openwrt
-        rm -rf target/linux/rockchip
-        rm -rf package/boot
-        svn co https://github.com/DHDAXCW/lede-rockchip/trunk/package/boot package/boot
-        svn co https://github.com/DHDAXCW/lede-rockchip/trunk/target/linux/rockchip target/linux/rockchip
         
     - name: Update Feeds
       id: update
@@ -212,3 +208,4 @@ jobs:
       with:
          name: |
             bin-archive
+            
