@@ -10,7 +10,9 @@
 # 🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧
 
 rm -rf package/kernel/mac80211
-svn export https://github.com/mj22226/openwrt/branches/linux-6.2/package/kernel/mac80211 package/kernel/mac80211
+svn export https://github.com/openwrt/openwrt/trunk/package/kernel/mac80211 package/kernel/mac80211
+rm -rf package/kernel/mt76
+svn export https://github.com/openwrt/openwrt/trunk/package/kernel/mt76 package/kernel/mt76
 rm -rf package/kernel/rtl8821cu
 
 # alist
@@ -142,4 +144,3 @@ sed -i 's/5.4/6.1/g' ./target/linux/rockchip/Makefile
 rm -rf target/linux/rockchip/image/armv8.mk
 cp -f $GITHUB_WORKSPACE/armv8.mk target/linux/rockchip/image/armv8.mk
 cp -f $GITHUB_WORKSPACE/999-fuck-rockchip-pcie.patch target/linux/rockchip/patches-6.1/999-fuck-rockchip-pcie.patch
-wget -P package/kernel/ksmbd/patches https://raw.githubusercontent.com/mj22226/openwrt/linux-6.2/package/kernel/ksmbd/patches/11-fixup-build-linux-6-1.patch
