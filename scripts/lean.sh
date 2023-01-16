@@ -44,7 +44,7 @@ git clone --depth=1 https://github.com/sirpdboy/NetSpeedTest
 git clone --depth=1 https://github.com/sirpdboy/luci-app-autotimeset
 
 # Add luci-app-adguardhome
-svn export https://github.com/Lienol/openwrt-package/branches/other/luci-app-adguardhome
+# svn export https://github.com/Lienol/openwrt-package/branches/other/luci-app-adguardhome
 
 # Add luci-app-passwall
 git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall
