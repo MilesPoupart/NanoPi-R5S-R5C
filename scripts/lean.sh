@@ -141,7 +141,17 @@ sed -i 's/192.168.1.1/192.168.3.1/g' package/base-files/files/bin/config_generat
 sed -i '/uci commit system/i\uci set system.@system[0].hostname='MagicWrt'' package/lean/default-settings/files/zzz-default-settings
 sed -i "s/OpenWrt /MilesPoupart @ MagicWrt /g" package/lean/default-settings/files/zzz-default-settings
 
-echo -e " MilesPoupart's MagicWrt built on "$(date +%Y.%m.%d)"\n -----------------------------------------------------" >> package/base-files/files/etc/banner
+rm package/base-files/files/etc/banner
+touch package/base-files/files/etc/banner
+echo -e "------------------------------------------------------------" >> package/base-files/files/etc/banner
+echo -e "______  ___              _____      ___       __      _____ " >> package/base-files/files/etc/banner
+echo -e "___   |/  /_____ _______ ___(_)_______ |     / /________  /_" >> package/base-files/files/etc/banner
+echo -e "__  /|_/ /_  __ `/_  __ `/_  /_  ___/_ | /| / /__  ___/  __/" >> package/base-files/files/etc/banner
+echo -e "_  /  / / / /_/ /_  /_/ /_  / / /__ __ |/ |/ / _  /   / /_  " >> package/base-files/files/etc/banner
+echo -e "/_/  /_/  \__,_/ _\__, / /_/  \___/ ____/|__/  /_/    \__/  " >> package/base-files/files/etc/banner
+echo -e "                 /____/                                     " >> package/base-files/files/etc/banner
+echo -e "------------------------------------------------------------" >> package/base-files/files/etc/banner
+echo -e "        MilesPoupart's MagicWrt built on "$(date +%Y.%m.%d)"\n____________________________________________________________________" >> package/base-files/files/etc/banner
 
 # Test kernel 6.1
 sed -i 's/5.4/6.1/g' ./target/linux/rockchip/Makefile
