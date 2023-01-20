@@ -149,7 +149,7 @@ echo -e "_  /  / / / /_/ /_  /_/ /_  / / /__ __ |/ |/ / _  /   / /_  " >> packag
 echo -e "/_/  /_/  \__,_/ _\__, / /_/  \___/ ____/|__/  /_/    \__/  " >> package/base-files/files/etc/banner
 echo -e "                 /____/                                     " >> package/base-files/files/etc/banner
 echo -e "------------------------------------------------------------" >> package/base-files/files/etc/banner
-echo -e "        MilesPoupart's MagicWrt built on "$(date +%Y.%m.%d)"\n____________________________________________________________________" >> package/base-files/files/etc/banner
+echo -e "        MilesPoupart's MagicWrt built on "$(date +%Y.%m.%d)"\n------------------------------------------------------------" >> package/base-files/files/etc/banner
 
 # Test kernel 6.1
 sed -i 's/5.4/6.1/g' ./target/linux/rockchip/Makefile
