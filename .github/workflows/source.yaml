@@ -76,8 +76,7 @@ jobs:
     - name: Update And install Feeds
       run: | 
         cd $OPENWRTROOT
-        chmod +x ../scripts/*.sh
-        ../scripts/feeds_settings.sh
+        ./scripts/feeds install -a
         
     - name: Load Custom Configuration
       run: |
