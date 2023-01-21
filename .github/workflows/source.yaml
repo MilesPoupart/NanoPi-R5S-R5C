@@ -1,4 +1,4 @@
-name: source
+name: source_docker
 
 on:
   repository_dispatch:
@@ -29,6 +29,7 @@ jobs:
       SUBTARGET: ${{ steps.compile.outputs.SUBTARGET }}
       FIRMWARE: ${{ steps.compile.outputs.FIRMWARE }}
       GENERATE_STATUS: ${{ steps.generate.outputs.GENERATE_STATUS }}
+      
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -109,7 +110,7 @@ jobs:
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
-        
+
     - name: Comporession
       run: |
         ZSTD_CLEVEL=19 tar --zstd -cf openwrt.tar.zst ./openwrt
