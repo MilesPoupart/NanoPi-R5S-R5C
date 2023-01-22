@@ -144,7 +144,7 @@ touch package/base-files/files/etc/banner
 echo -e "------------------------------------------------------------" >> package/base-files/files/etc/banner
 echo -e "______  ___              _____      ___       __      _____ " >> package/base-files/files/etc/banner
 echo -e "___   |/  /_____ _______ ___(_)_______ |     / /________  /_" >> package/base-files/files/etc/banner
-echo -e "__  /|_/ /_  __ `/_  __ `/_  /_  ___/_ | /| / /__  ___/  __/" >> package/base-files/files/etc/banner
+echo -e "__  /|_/ /_  __ \`/_  __ \`/_  /_  ___/_ | /| / /__  ___/  __/" >> package/base-files/files/etc/banner
 echo -e "_  /  / / / /_/ /_  /_/ /_  / / /__ __ |/ |/ / _  /   / /_  " >> package/base-files/files/etc/banner
 echo -e "/_/  /_/  \__,_/ _\__, / /_/  \___/ ____/|__/  /_/    \__/  " >> package/base-files/files/etc/banner
 echo -e "                 /____/                                     " >> package/base-files/files/etc/banner
