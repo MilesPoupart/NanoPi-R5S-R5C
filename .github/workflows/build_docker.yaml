@@ -160,7 +160,7 @@ jobs:
         
     - name: Generate release tag
       id: tag
-      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+      if: env.GENERATE_STATUS == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
           echo "release_tag=$(date +"%Y.%m.%d")-Lean1" >> $GITHUB_OUTPUT
           echo "release_date=$(date +"%Y.%m.%d")" >> $GITHUB_OUTPUT
@@ -174,7 +174,7 @@ jobs:
           
     - name: Upload firmware to release
       uses: softprops/action-gh-release@v1
-      if: steps.tag.outputs.status == 'success' && !cancelled()
+      if: env.GENERATE_STATUS == 'success' && steps.tag.outputs.status == 'success' && !cancelled()
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -199,7 +199,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
     - name: Remove Images
-      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+      if: env.GENERATE_STATUS == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: | 
         docker rmi $(docker images -q) -f
         docker images
