@@ -33,6 +33,9 @@ jobs:
       GENERATE_STATUS: ${{ steps.generate.outputs.GENERATE_STATUS }}
 
     steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
     - name: Initialization Environment
       env:
         DEBIAN_FRONTEND: noninteractive
@@ -46,9 +49,6 @@ jobs:
         [ -f /etc/issue ] && cat /etc/issue
         ulimit -a
         
-    - name: Checkout
-      uses: actions/checkout@v3
-  
     - name: Pull Image
       run: |
         docker pull $IMAGE
@@ -81,8 +81,8 @@ jobs:
         cd $OPENWRTROOT
         echo "OPENWRTROOT=$PWD" >> $GITHUB_ENV
         echo "OPENWRTROOT=$PWD" >> $GITHUB_OUTPUT
-        chmod +x ../scripts/*.sh
-        ../scripts/feeds_settings.sh
+        cat customfeeds/packages/feeds.conf.default
+        ./scripts/feeds update -a && ./scripts/feeds install -a
         make defconfig
         
     - name: Show config
@@ -147,13 +147,18 @@ jobs:
         pushd bin/targets/rockchip/armv8
         rm -rf openwrt-rockchip-armv8.manifest
         rm -rf openwrt-rockchip-armv8-rootfs.tar.gz
-        rm -rf config.buildinfo
-        rm -rf packages-server.zip
+        mv config.buildinfo docker-config.buildinfo
         mv openwrt-rockchip-armv8-friendlyarm_nanopi-r5s-ext4-sysupgrade.img.gz docker-friendlyarm_nanopi-r5s-ext4-sysupgrade.img.gz 
         mv openwrt-rockchip-armv8-friendlyarm_nanopi-r5c-ext4-sysupgrade.img.gz docker-friendlyarm_nanopi-r5c-ext4-sysupgrade.img.gz 
         mv openwrt-rockchip-armv8-friendlyarm_nanopi-r5s-squashfs-sysupgrade.img.gz docker-friendlyarm_nanopi-r5s-squashfs-sysupgrade.img.gz
         mv openwrt-rockchip-armv8-friendlyarm_nanopi-r5c-squashfs-sysupgrade.img.gz docker-friendlyarm_nanopi-r5c-squashfs-sysupgrade.img.gz
         popd
+        mkdir -p server/web/snapshots/targets/$TARGET/$SUBTARGET
+        cp -r $OPENWRTROOT/bin/packages server/web/snapshots
+        cp -r $OPENWRTROOT/bin/targets/$TARGET/$SUBTARGET/packages server/web/snapshots/targets/$TARGET/$SUBTARGET
+        mv server packages-server
+        zip -qrm docker-packages-server.zip packages-server
+        mv docker-packages-server.zip $OPENWRTROOT/bin/targets/$TARGET/$SUBTARGET
         make checksum
         mv bin/targets/rockchip/armv8/sha256sums bin/targets/rockchip/armv8/docker-sha256sums
         echo "GENERATE_STATUS=success" >> $GITHUB_OUTPUT
@@ -199,7 +204,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
     - name: Remove Images
-      if: steps.generate.outputs.GENERATE_STATUS == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: | 
         docker rmi $(docker images -q) -f
         docker images

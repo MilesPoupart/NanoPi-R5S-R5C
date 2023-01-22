@@ -21,7 +21,7 @@ env:
 jobs:
 
   Download:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     outputs:
       OPENWRTROOT: ${{ steps.update.outputs.OPENWRTROOT }}
       PLATFORM: ${{ steps.compile.outputs.PLATFORM }}
@@ -31,6 +31,8 @@ jobs:
       GENERATE_STATUS: ${{ steps.generate.outputs.GENERATE_STATUS }}
 
     steps:
+    - name: Checkout
+      uses: actions/checkout@v3
 
     - name: Initialization Environment
       env:
@@ -44,10 +46,7 @@ jobs:
         [ -f /etc/issue.net ] && cat /etc/issue.net
         [ -f /etc/issue ] && cat /etc/issue
         ulimit -a
-
-    - name: Checkout
-      uses: actions/checkout@v3
-      
+        
     - name: Login to Docker Hub
       uses: docker/login-action@v2
       with:
@@ -57,8 +56,9 @@ jobs:
     - name: Clone Source Code
       run: |
         df -hT $PWD
-        git clone $REPO_URL -b $REPO_BRANCH openwrt && cd openwrt
-
+        git clone $REPO_URL -b $REPO_BRANCH openwrt
+        cd openwrt
+        
     # - name: Reset Version
     #   id: reset
     #   run: |
@@ -69,7 +69,7 @@ jobs:
     #     git reset --hard $COMMIT_ID
     #     rm -rf .git
 
-    - name: Clone Custom Feeds
+    - name: Update Feeds
       id: update
       run: |
         cd openwrt
@@ -79,18 +79,18 @@ jobs:
         git clone --depth=1 https://github.com/MilesPoupart/packages customfeeds/packages
         git clone --depth=1 https://github.com/MilesPoupart/luci customfeeds/luci
         chmod +x ../scripts/*.sh
-        ../scripts/hook-feeds_source.sh
-  
+        ../scripts/hook-feeds.sh
+
     - name: MOD index file
       run: |
          cd $OPENWRTROOT/package/lean/autocore/files/arm
          sed -i '/Load Average/i\\t\t<tr><td width="33%"><%:Github %></td><td><a href="https://github.com/MilesPoupart/NanoPi-R5S-R5C"><%:固件下载%></a></td></tr>' index.htm
 
-    - name: Update And install Feeds
-      run: | 
+    - name: Install Feeds
+      run: |
         cd $OPENWRTROOT
-        chmod +x ../scripts/*.sh
-        ../scripts/feeds_settings.sh
+        cat customfeeds/packages/feeds.conf.default
+        ./scripts/feeds install -a
         
     - name: Load Custom Configuration
       run: |
@@ -103,14 +103,15 @@ jobs:
         ../scripts/preset-terminal-tools.sh
         make defconfig
         
-    - name: Download Packages
+    - name: Download Package
       id: package
       run: |
         cd $OPENWRTROOT
+        # cat .config
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
-
+  
     - name: Comporession
       run: |
         tar --zstd -cf openwrt.tar.zst ./openwrt
