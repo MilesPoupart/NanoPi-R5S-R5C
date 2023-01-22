@@ -89,7 +89,7 @@ jobs:
     - name: Install Feeds
       run: |
         cd $OPENWRTROOT
-        cat customfeeds/packages/feeds.conf.default
+        cat feeds.conf.default
         ./scripts/feeds install -a
         
     - name: Load Custom Configuration
