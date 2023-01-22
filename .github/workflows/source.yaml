@@ -80,7 +80,6 @@ jobs:
         git clone --depth=1 https://github.com/MilesPoupart/luci customfeeds/luci
         chmod +x ../scripts/*.sh
         ../scripts/hook-feeds.sh
-        cat feeds.conf.default
 
     - name: MOD index file
       run: |

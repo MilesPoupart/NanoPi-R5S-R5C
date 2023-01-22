@@ -81,9 +81,8 @@ jobs:
         cd $OPENWRTROOT
         echo "OPENWRTROOT=$PWD" >> $GITHUB_ENV
         echo "OPENWRTROOT=$PWD" >> $GITHUB_OUTPUT
-        chmod +x ../scripts/*.sh
-        cat feeds.conf.default
-        ../scripts/feeds_settings.sh
+        ./scripts/feeds update -a
+        ./scripts/feeds install -a
         make defconfig
         
     - name: Show config
