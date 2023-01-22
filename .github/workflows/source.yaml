@@ -29,7 +29,7 @@ jobs:
       SUBTARGET: ${{ steps.compile.outputs.SUBTARGET }}
       FIRMWARE: ${{ steps.compile.outputs.FIRMWARE }}
       GENERATE_STATUS: ${{ steps.generate.outputs.GENERATE_STATUS }}
-      
+
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -80,6 +80,7 @@ jobs:
         git clone --depth=1 https://github.com/MilesPoupart/luci customfeeds/luci
         chmod +x ../scripts/*.sh
         ../scripts/hook-feeds.sh
+        cat feeds.conf.default
 
     - name: MOD index file
       run: |
