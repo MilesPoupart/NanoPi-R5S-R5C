@@ -54,7 +54,7 @@ git clone --depth=1 https://github.com/fw876/helloworld
 
 # Add luci-app-unblockneteasemusic
 rm -rf ../../customfeeds/luci/applications/luci-app-unblockmusic
-git clone --depth=1 https://github.com/UnblockNeteaseMusic/luci-app-unblockneteasemusic.git
+git clone --branch master https://github.com/UnblockNeteaseMusic/luci-app-unblockneteasemusic.git
 
 # Add luci-app-vssr <M>
 git clone --depth=1 https://github.com/jerrykuku/lua-maxminddb.git
@@ -107,7 +107,7 @@ git clone --depth=1 https://github.com/DHDAXCW/OpenAppFilter
 
 # Add luci-aliyundrive-webdav
 rm -rf ../../customfeeds/luci/applications/luci-app-aliyundrive-webdav 
-rm -rf ../../customfeeds/luci/applications/aliyundrive-webdav
+rm -rf ../../customfeeds/packages/multimedia/aliyundrive-webdav
 svn export https://github.com/messense/aliyundrive-webdav/trunk/openwrt/aliyundrive-webdav
 svn export https://github.com/messense/aliyundrive-webdav/trunk/openwrt/luci-app-aliyundrive-webdav
 popd
