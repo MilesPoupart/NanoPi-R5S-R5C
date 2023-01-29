@@ -6,7 +6,7 @@
 # Blog: https://p3terx.com
 #=================================================
 
-name: build-compose_docker
+name: build-compose
 
 on:
   repository_dispatch:

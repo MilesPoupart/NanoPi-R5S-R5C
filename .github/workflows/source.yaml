@@ -1,4 +1,4 @@
-name: source_docker
+name: source
 
 on:
   repository_dispatch:
