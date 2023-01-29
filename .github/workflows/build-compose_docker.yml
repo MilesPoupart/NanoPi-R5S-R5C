@@ -11,8 +11,17 @@ name: build-compose_docker
 on:
   repository_dispatch:
   workflow_dispatch:
-  #schedule:
-    #- cron: 0 17 * * *
+    inputs:
+      use_machine:
+        description: 'Machine'
+        required: true
+        default: 7700HQ
+        type: choice
+        options:
+        - 7700HQ
+        - 10700
+  # schedule:
+  #   - cron: 0 17 * * *
   # watch:
   #   types: started
 
@@ -24,20 +33,15 @@ env:
   KMODS_IN_FIRMWARE: true
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
-  IMAGE: ${{ secrets.IMAGE }}
-  # COMMIT_ID: ${{ vars.COMMIT_ID }}
+  IMAGE: ${{ vars.IMAGE }}
+  COMMIT_ID: ${{ vars.COMMIT_ID }}
 
 jobs:
 
-  Download:
+  source-code:
     runs-on: ubuntu-22.04
     outputs:
       OPENWRTROOT: ${{ steps.update.outputs.OPENWRTROOT }}
-      PLATFORM: ${{ steps.compile.outputs.PLATFORM }}
-      TARGET: ${{ steps.compile.outputs.TARGET }}
-      SUBTARGET: ${{ steps.compile.outputs.SUBTARGET }}
-      FIRMWARE: ${{ steps.compile.outputs.FIRMWARE }}
-      GENERATE_STATUS: ${{ steps.generate.outputs.GENERATE_STATUS }}
 
     steps:
     - name: Checkout
@@ -139,27 +143,21 @@ jobs:
         context: ./
         file: ./Dockerfile
         push: true
-        tags: ${{ secrets.IMAGE }}
+        tags: ${{ vars.IMAGE }}
         
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
 
-  Build:
-    runs-on: self-hosted
+  compile-init:
+    runs-on: [self-hosted, Linux, X64, "${{ inputs.use_machine }}"]
     timeout-minutes: 1440
-    needs: [Download]
+    needs: [source-code]
+
     outputs:
-      OPENWRTROOT: ${{ steps.update.outputs.OPENWRTROOT }}
-      PLATFORM: ${{ steps.compile.outputs.PLATFORM }}
-      TARGET: ${{ steps.compile.outputs.TARGET }}
-      SUBTARGET: ${{ steps.compile.outputs.SUBTARGET }}
-      FIRMWARE: ${{ steps.compile.outputs.FIRMWARE }}
-      GENERATE_STATUS: ${{ steps.generate.outputs.GENERATE_STATUS }}
+      OPENWRTROOT: ${{ steps.clean.outputs.OPENWRTROOT }}
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-
+  
     - name: Initialization Environment
       env:
         DEBIAN_FRONTEND: noninteractive
@@ -172,15 +170,21 @@ jobs:
         [ -f /etc/issue.net ] && cat /etc/issue.net
         [ -f /etc/issue ] && cat /etc/issue
         ulimit -a
-        
+
+    - name: Checkout
+      uses: actions/checkout@v3
+      
     - name: Pull Image
       run: |
         docker pull $IMAGE
         docker images
-        
+    
     - name: Copy Files
       id: copy
       run: |
+        if [[ -f openwrt.tar.zst ]]; then
+            rm openwrt.tar.zst
+        fi
         ID="$(docker create --name openwrt "$IMAGE")"
         docker cp $ID:/openwrt/openwrt.tar.zst ./openwrt.tar.zst
         docker rm $ID
@@ -189,10 +193,15 @@ jobs:
 
     - name: Decompression
       run: | 
+        if [[ -d openwrt ]]; then
+            rm -rf ./openwrt
+        fi
         tar -xf openwrt.tar.zst
         ls -alh ./openwrt
-
+        rm openwrt.tar.zst
+      
     - name: Clean
+      id: clean
       run: |
         cd openwrt
         echo "OPENWRTROOT=$PWD" >> $GITHUB_ENV
@@ -200,27 +209,57 @@ jobs:
         rm -rf ./tmp && rm -rf ./build_dir
     
     - name: Feeds Settings
-      id: update
       run: | 
         cd $OPENWRTROOT
-        echo "OPENWRTROOT=$PWD" >> $GITHUB_ENV
-        echo "OPENWRTROOT=$PWD" >> $GITHUB_OUTPUT
         chmod +x ../scripts/*.sh
         ../scripts/feeds_settings.sh
         make defconfig
-        
+
     - name: Show config
       run: |
         cd $OPENWRTROOT
         cat .config
-        
-    - name: Compile Packages
+
+  compile-toolchain:
+    runs-on: [self-hosted, Linux, X64, "${{ inputs.use_machine }}"]
+    timeout-minutes: 1440
+    needs: [compile-init]
+
+    steps:
+    - name: Compile toolchain
       id: compile
-      run: |
-        cd $OPENWRTROOT
+      run: | 
+        cd ${{ needs.compile-init.outputs.OPENWRTROOT }}
         echo -e "$(nproc) thread compile"
         make tools/compile -j$(nproc) || make tools/compile -j1 V=s
         make toolchain/compile -j$(nproc) || make toolchain/compile -j1 V=s
+  
+  compile-package:
+    runs-on: [self-hosted, Linux, X64, "${{ inputs.use_machine }}"]
+    timeout-minutes: 1440
+    needs: [compile-init, compile-toolchain]
+
+    outputs:
+      OPENWRTROOT: ${{ steps.compile.outputs.OPENWRTROOT }}
+      PLATFORM: ${{ steps.compile.outputs.PLATFORM }}
+      TARGET: ${{ steps.compile.outputs.TARGET }}
+      SUBTARGET: ${{ steps.compile.outputs.SUBTARGET }}
+      FIRMWARE: ${{ steps.compile.outputs.FIRMWARE }}
+      GENERATE_STATUS: ${{ steps.generate.outputs.GENERATE_STATUS }}
+      RELEASE_DATE: ${{ steps.tag.outputs.RELEASE_DATE }}
+      RELEASE_TAG: ${{ steps.tag.outputs.RELEASE_TAG }}
+      RELEASE_STATUS: ${{ steps.tag.outputs.RELEASE_STATUS }}
+
+    steps:
+
+    - name: Compile package
+      id: compile
+      run: |
+        cd ${{ needs.compile-init.outputs.OPENWRTROOT }}
+        OPENWRTROOT=$(pwd)
+        echo "OPENWRTROOT=$OPENWRTROOT" >> $GITHUB_ENV
+        echo "OPENWRTROOT=$OPENWRTROOT" >> $GITHUB_OUTPUT
+        echo -e "$(nproc) thread compile"
         make target/compile -j$(nproc) || make target/compile -j1 V=s IGNORE_ERRORS=1
         make diffconfig
         make package/compile -j$(nproc) IGNORE_ERRORS=1 || make package/compile -j1 V=s IGNORE_ERRORS=1
@@ -289,52 +328,62 @@ jobs:
         
     - name: Generate release tag
       id: tag
-      if: steps.generate.outputs.GENERATE_STATUS == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
-          echo "release_tag=$(date +"%Y.%m.%d")-Lean1" >> $GITHUB_OUTPUT
-          echo "release_date=$(date +"%Y.%m.%d")" >> $GITHUB_OUTPUT
+          echo "RELEASE_TAG=$(date +"%Y.%m.%d")-Lean1" >> $GITHUB_OUTPUT
+          echo "RELEASE_DATA=$(date +"%Y.%m.%d")" >> $GITHUB_OUTPUT
           touch release.txt
           echo "后台地址：192.168.3.1
                 full   = 全插件
                 docker = 带docker
                 slim   = 精简版
                 beggar = 乞丐版" >> release.txt
-          echo "status=success" >> $GITHUB_OUTPUT
-          
+          echo "RELEASE_STATUS=success" >> $GITHUB_OUTPUT
+
+  upload:
+    runs-on: [self-hosted, Linux, X64, "${{ inputs.use_machine }}"]
+    timeout-minutes: 1440
+    needs: [compile-package]
+
+    steps:
+  
+    - name: Remove Images
+      if: env.UPLOAD_RELEASE == 'true' && !cancelled() && needs.compile-package.outputs.RELEASE_STATUS == 'success'
+      run: | 
+        ID_LIST="$(docker images -q)"
+        if [[ -n "${ID_LIST}" ]];then
+           docker rmi $ID_LIST -f
+        fi
+        docker images
+
     - name: Upload firmware to release
       uses: softprops/action-gh-release@v1
-      if: steps.tag.outputs.status == 'success' && !cancelled()
+      if: needs.compile-package.outputs.RELEASE_STATUS == 'success' && !cancelled() && env.UPLOAD_RELEASE == 'true'
       env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
       with:
-          name: ${{ steps.tag.outputs.release_date }} NanoPi-R5S-R5C-linux.6.1_固件下载
-          tag_name: ${{ steps.tag.outputs.release_tag }}
+          name: ${{ needs.compile-package.outputs.RELEASE_DATE }} NanoPi-R4S-R4SE-linux.5.4_固件下载
+          tag_name: ${{ needs.compile-package.outputs.RELEASE_TAG }}
           body_path: release.txt
-          files: ${{ env.FIRMWARE }}/*
+          files: ${{ needs.compile-package.outputs.FIRMWARE }}/*
 
     - name: Delete workflow runs
-      uses: Mattraks/delete-workflow-runs@v2
+      uses: GitRML/delete-workflow-runs@main
       with:
         retain_days: 1
         keep_minimum_runs: 1
 
     - name: Remove old Releases
-      uses: dev-drprasad/delete-older-releases@v0.2.1
+      uses: dev-drprasad/delete-older-releases@v0.1.0
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       with:
           keep_latest: 20
           delete_tags: true
       env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
-    - name: Remove Images
-      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
-      run: | 
-        docker rmi $(docker images -q) -f
-        docker images
-        
     - name: Delete Artifacts
-      uses: geekyeggo/delete-artifact@v2
+      uses: geekyeggo/delete-artifact@v1
       with:
           name: |
             bin-archive

@@ -3,8 +3,8 @@ name: source_docker
 on:
   repository_dispatch:
   workflow_dispatch:
-  #schedule:
-    #- cron: 0 17 * * *
+  # schedule:
+  #   - cron: 0 17 * * *
   # watch:
   #   types: started
 
@@ -16,19 +16,14 @@ env:
   KMODS_IN_FIRMWARE: true
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
-  # COMMIT_ID: ${{ vars.COMMIT_ID }}
+  COMMIT_ID: ${{ vars.COMMIT_ID }}
 
 jobs:
 
-  Download:
+  source-code:
     runs-on: ubuntu-22.04
     outputs:
       OPENWRTROOT: ${{ steps.update.outputs.OPENWRTROOT }}
-      PLATFORM: ${{ steps.compile.outputs.PLATFORM }}
-      TARGET: ${{ steps.compile.outputs.TARGET }}
-      SUBTARGET: ${{ steps.compile.outputs.SUBTARGET }}
-      FIRMWARE: ${{ steps.compile.outputs.FIRMWARE }}
-      GENERATE_STATUS: ${{ steps.generate.outputs.GENERATE_STATUS }}
 
     steps:
     - name: Checkout
@@ -130,7 +125,7 @@ jobs:
         context: ./
         file: ./Dockerfile
         push: true
-        tags: ${{ secrets.IMAGE }}
+        tags: ${{ vars.IMAGE }}
         
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
