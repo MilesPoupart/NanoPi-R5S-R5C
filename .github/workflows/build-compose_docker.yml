@@ -20,6 +20,16 @@ on:
         options:
         - 7700HQ
         - 10700
+      compile_version:
+        description: 'Version'
+        required: true
+        default: docker
+        type: choice
+        options:
+        - docker
+        - full
+        - stable
+        - beggar
   # schedule:
   #   - cron: 0 17 * * *
   # watch:
@@ -28,12 +38,12 @@ on:
 env:
   REPO_URL: https://github.com/DHDAXCW/lede-rockchip
   REPO_BRANCH: stable
-  CONFIG_FILE: configs/lean/lean_docker.config
+  CONFIG_FILE: configs/lean/lean_${{ inputs.compile_version }}.config
   DIY_SH: scripts/lean.sh
   KMODS_IN_FIRMWARE: true
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
-  IMAGE: ${{ vars.IMAGE }}
+  IMAGE: milespoupart/action-openwrt-cache:r5s-r5c_${{ inputs.compile_version }}
   COMMIT_ID: ${{ vars.COMMIT_ID }}
 
 jobs:
@@ -143,7 +153,7 @@ jobs:
         context: ./
         file: ./Dockerfile
         push: true
-        tags: ${{ vars.IMAGE }}
+        tags: ${{ env.IMAGE }}
         
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
