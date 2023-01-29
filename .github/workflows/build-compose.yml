@@ -320,20 +320,20 @@ jobs:
         pushd bin/targets/rockchip/armv8
         rm -rf openwrt-rockchip-armv8.manifest
         rm -rf openwrt-rockchip-armv8-rootfs.tar.gz
-        mv config.buildinfo docker-config.buildinfo
-        # mv openwrt-rockchip-armv8-friendlyarm_nanopi-r5s-ext4-sysupgrade.img.gz docker-friendlyarm_nanopi-r5s-ext4-sysupgrade.img.gz 
-        mv openwrt-rockchip-armv8-friendlyarm_nanopi-r5c-ext4-sysupgrade.img.gz docker-friendlyarm_nanopi-r5c-ext4-sysupgrade.img.gz 
-        # mv openwrt-rockchip-armv8-friendlyarm_nanopi-r5s-squashfs-sysupgrade.img.gz docker-friendlyarm_nanopi-r5s-squashfs-sysupgrade.img.gz
-        mv openwrt-rockchip-armv8-friendlyarm_nanopi-r5c-squashfs-sysupgrade.img.gz docker-friendlyarm_nanopi-r5c-squashfs-sysupgrade.img.gz
+        mv config.buildinfo ${{ inputs.compile_version }}-config.buildinfo
+        # mv openwrt-rockchip-armv8-friendlyarm_nanopi-r5s-ext4-sysupgrade.img.gz ${{ inputs.compile_version }}-friendlyarm_nanopi-r5s-ext4-sysupgrade.img.gz 
+        mv openwrt-rockchip-armv8-friendlyarm_nanopi-r5c-ext4-sysupgrade.img.gz ${{ inputs.compile_version }}-friendlyarm_nanopi-r5c-ext4-sysupgrade.img.gz 
+        # mv openwrt-rockchip-armv8-friendlyarm_nanopi-r5s-squashfs-sysupgrade.img.gz ${{ inputs.compile_version }}-friendlyarm_nanopi-r5s-squashfs-sysupgrade.img.gz
+        mv openwrt-rockchip-armv8-friendlyarm_nanopi-r5c-squashfs-sysupgrade.img.gz ${{ inputs.compile_version }}-friendlyarm_nanopi-r5c-squashfs-sysupgrade.img.gz
         popd
         mkdir -p server/web/snapshots/targets/$TARGET/$SUBTARGET
         cp -r $OPENWRTROOT/bin/packages server/web/snapshots
         cp -r $OPENWRTROOT/bin/targets/$TARGET/$SUBTARGET/packages server/web/snapshots/targets/$TARGET/$SUBTARGET
         mv server packages-server
-        zip -qrm docker-packages-server.zip packages-server
-        mv docker-packages-server.zip $OPENWRTROOT/bin/targets/$TARGET/$SUBTARGET
+        zip -qrm ${{ inputs.compile_version }}-packages-server.zip packages-server
+        mv ${{ inputs.compile_version }}-packages-server.zip $OPENWRTROOT/bin/targets/$TARGET/$SUBTARGET
         make checksum
-        mv bin/targets/rockchip/armv8/sha256sums bin/targets/rockchip/armv8/docker-sha256sums
+        mv bin/targets/rockchip/armv8/sha256sums bin/targets/rockchip/armv8/${{ inputs.compile_version }}-sha256sums
         echo "GENERATE_STATUS=success" >> $GITHUB_OUTPUT
         
     - name: Generate release tag
