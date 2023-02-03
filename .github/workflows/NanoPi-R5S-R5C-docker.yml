@@ -183,6 +183,7 @@ jobs:
           echo "release_date=$(date +"%Y.%m.%d")" >> $GITHUB_OUTPUT
           touch release.txt
           echo "后台地址：192.168.3.1
+                docker_lite = 带docker(精简)
                 full   = 全插件
                 docker = 带docker
                 slim   = 精简版
@@ -195,7 +196,7 @@ jobs:
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-          name: ${{ steps.tag.outputs.release_date }} NanoPi-R5C-linux-6.1_固件下载
+          name: ${{ steps.tag.outputs.release_date }} NanoPi-R5C-linux.6.1_固件下载
           tag_name: ${{ steps.tag.outputs.release_tag }}
           body_path: release.txt
           files: ${{ env.FIRMWARE }}/*
