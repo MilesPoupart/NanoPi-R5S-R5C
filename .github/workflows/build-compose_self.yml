@@ -34,12 +34,12 @@ on:
       task_setting:
         description: 'Task Settings'
         required: true
-        default : build-compose
+        default : "build-compose"
         type: choice
         options:
-        - build-compose
-        - build-only
-        - source-only
+        - "build-compose"
+        - "build-only"
+        - "source-only"
 
   # schedule:
   #   - cron: 0 17 * * *
