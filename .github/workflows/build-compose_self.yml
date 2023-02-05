@@ -39,7 +39,7 @@ on:
         options:
         - 'build-compose'
         - 'build-only'
-        - "source-only"
+        - 'source-only'
 
   # schedule:
   #   - cron: 0 17 * * *
@@ -201,7 +201,7 @@ jobs:
     #   run: echo ${{ steps.docker_build.outputs.digest }}
 
   CompileInitialize:
-    if: inputs.task_setting != "source-only"
+    if: inputs.task_setting != 'source-only'
     runs-on: [self-hosted, Linux, X64, "${{ inputs.use_machine }}"]
     timeout-minutes: 1440
     needs: [DownloadSourceCode]
