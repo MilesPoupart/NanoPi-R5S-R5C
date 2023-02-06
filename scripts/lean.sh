@@ -50,7 +50,7 @@ git clone --depth=1 https://github.com/sirpdboy/luci-app-autotimeset
 # svn export https://github.com/Lienol/openwrt-package/branches/other/luci-app-adguardhome
 
 # Add luci-app-passwall
-git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall
+git clone https://github.com/xiaorouji/openwrt-passwall
 cd openwrt-passwall
 git checkout 4fd4bf8
 cd ../
