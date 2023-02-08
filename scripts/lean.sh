@@ -35,7 +35,7 @@ pushd package/community
 
 # Add luci-app-netdata
 rm -rf ../../customfeeds/luci/applications/luci-app-netdata
-git clone --depth=1 https://github.com/sirpdboy/luci-app-netdata
+git clone -b patch-1 --depth=1 https://github.com/MilesPoupart/luci-app-netdata
 
 # Add luci-app-partexp
 git clone --depth=1 https://github.com/sirpdboy/luci-app-partexp
