@@ -9,6 +9,17 @@
 
 # 🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧
 
+# mt7921
+rm -rf package/kernel/rtl8821cu
+rm -rf package/kernel/mac80211
+rm -rf package/kernel/mt76
+rm -rf package/network/services/hostapd
+svn export https://github.com/DHDAXCW/NanoPi-R5S-R5C/trunk/mt76 package/kernel/mt76
+svn export https://github.com/openwrt/openwrt/trunk/package/kernel/mac80211 package/kernel/mac80211
+rm -rf package/kernel/mac80211/Makefile
+cp -f $GITHUB_WORKSPACE/Makefile package/kernel/mac80211/Makefile
+svn export https://github.com/openwrt/openwrt/trunk/package/network/services/hostapd package/network/services/hostapd
+
 # alist
 git clone https://github.com/sbwml/luci-app-alist package/alist
 rm -rf feeds/packages/lang/golang
@@ -19,10 +30,10 @@ mkdir package/community
 pushd package/community
 
 # Add Lienol's Packages
-#git clone --depth=1 https://github.com/Lienol/openwrt-package
-#rm -rf openwrt-package/verysync
-#rm -rf openwrt-package/luci-app-verysync
-#rm -rf openwrt-packages/libs/boost
+git clone --depth=1 https://github.com/Lienol/openwrt-package
+rm -rf ../../customfeeds/luci/applications/luci-app-kodexplorer
+rm -rf openwrt-package/verysync
+rm -rf openwrt-package/luci-app-verysync
 
 # Add luci-app-netdata
 rm -rf ../../customfeeds/luci/applications/luci-app-netdata
@@ -39,7 +50,6 @@ git clone --depth=1 https://github.com/sirpdboy/luci-app-autotimeset
 
 # Add luci-app-adguardhome
 # svn export https://github.com/Lienol/openwrt-package/branches/other/luci-app-adguardhome
-
 # Add luci-app-passwall
 git clone https://github.com/xiaorouji/openwrt-passwall
 cd openwrt-passwall
