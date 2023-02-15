@@ -27,6 +27,7 @@ on:
         type: choice
         options:
         - docker_lite
+        - full_lite
         - docker
         - full
         - stable
@@ -388,6 +389,7 @@ jobs:
           touch release.txt
           echo "后台地址：192.168.3.1
                 docker_lite = 带docker(精简)
+                full_lite = 全插件(精简)
                 full   = 全插件
                 docker = 带docker
                 slim   = 精简版
