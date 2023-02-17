@@ -102,7 +102,7 @@ git clone --depth=1 https://github.com/tindy2013/openwrt-subconverter
 # Add luci-app-smartdns & smartdns
 svn export https://github.com/281677160/openwrt-package/trunk/luci-app-smartdns
 
-# Add luci-app-services-wolplus
+# Add luci-app-wolplus
 svn export https://github.com/sundaqiang/openwrt-packages/trunk/luci-app-wolplus
 
 # Add apk (Apk Packages Manager)
