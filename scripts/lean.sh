@@ -49,6 +49,7 @@ git clone --depth=1 https://github.com/sirpdboy/NetSpeedTest
 
 # Add luci-app-autotimeset
 git clone --depth=1 https://github.com/sirpdboy/luci-app-autotimeset
+sed -i "s/\"control\"/\"system\"/g" luci-app-autotimeset/luasrc/controller/autotimeset.lua
 
 # Add luci-app-adguardhome
 # svn export https://github.com/Lienol/openwrt-package/branches/other/luci-app-adguardhome
