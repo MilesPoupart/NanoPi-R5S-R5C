@@ -52,7 +52,9 @@ git clone --depth=1 https://github.com/sirpdboy/luci-app-autotimeset
 sed -i "s/\"control\"/\"system\"/g" luci-app-autotimeset/luasrc/controller/autotimeset.lua
 
 # Add luci-app-adguardhome
+rm -rf ../../customfeeds/packages/net/adguardhome
 # svn export https://github.com/Lienol/openwrt-package/branches/other/luci-app-adguardhome
+
 # Add luci-app-passwall
 git clone https://github.com/xiaorouji/openwrt-passwall
 cd openwrt-passwall
