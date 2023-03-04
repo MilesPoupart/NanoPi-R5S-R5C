@@ -1,3 +1,15 @@
+<div align="center">
+<a href="/LICENSE">
+    <img src="https://img.shields.io/github/license/MilesPoupart/NanoPi-R5S-R5C?style=flat&a=1" alt="">
+  </a>
+  </a><a href="https://github.com/MilesPoupart/NanoPi-R5S-R5C/releases">
+    <img src="https://img.shields.io/github/release/MilesPoupart/NanoPi-R5S-R5C.svg?style=flat">
+  </a><a href="hhttps://github.com/MilesPoupart/NanoPi-R5S-R5C/releases">
+    <img src="https://img.shields.io/github/downloads/MilesPoupart/NanoPi-R5S-R5C/total?style=flat">
+  </a>
+</div>
+<br>
+
 # 中文简体 | [English](https://github.com/DHDAXCW/NanoPi-R5S-2021/blob/main/EngLish.md)
 # NanoPi-R5S NanoPi-R5C
 # 机场推荐 [ENET--IEPL内网专线接入](https://www.easy2022.com/#/register?code=Ut7iWMrk)
