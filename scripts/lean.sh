@@ -60,9 +60,6 @@ rm -rf ../../customfeeds/packages/net/adguardhome
 
 # Add luci-app-passwall
 git clone https://github.com/xiaorouji/openwrt-passwall
-# cd openwrt-passwall
-# git checkout 4fd4bf8
-# cd ../
 git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall2
 svn export https://github.com/xiaorouji/openwrt-passwall/branches/luci/luci-app-passwall
 
@@ -125,7 +122,7 @@ svn export https://github.com/openwrt/packages/trunk/utils/apk
 git clone --depth=1 https://github.com/esirplayground/luci-app-poweroff
 
 # Add OpenAppFilter
-git clone --depth=1 https://github.com/DHDAXCW/OpenAppFilter
+git clone --depth=1 https://github.com/destan19/OpenAppFilter
 
 # Add luci-aliyundrive-webdav
 rm -rf ../../customfeeds/luci/applications/luci-app-aliyundrive-webdav 
