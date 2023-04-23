@@ -42,7 +42,7 @@ rm -rf openwrt-package/luci-app-verysync
 
 # Add luci-app-netdata
 rm -rf ../../customfeeds/luci/applications/luci-app-netdata
-git clone --depth=1 https://github.com/MilesPoupart/luci-app-netdata
+git clone --depth=1 https://github.com/sirpdboy/luci-app-netdata
 
 # Add luci-app-partexp
 git clone --depth=1 https://github.com/sirpdboy/luci-app-partexp
