@@ -71,7 +71,7 @@ define Device/hinlink_opc-h68k
   SOC := rk3568
   UBOOT_DEVICE_NAME := opc-h68k-rk3568
   IMAGE/sysupgrade.img.gz := boot-common | boot-script nanopi-r5s | pine64-img | gzip | append-metadata
-  DEVICE_PACKAGES := kmod-r8125
+  DEVICE_PACKAGES := kmod-r8125 kmod-mt7921e kmod-ata-ahci kmod-ata-ahci-platform kmod-ata-core luci-app-usbmodem minicom fibocom-dial
 endef
 TARGET_DEVICES += hinlink_opc-h68k
 
