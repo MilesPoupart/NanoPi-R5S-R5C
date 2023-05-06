@@ -171,7 +171,7 @@ echo -e "------------------------------------------------------------" >> packag
 echo -e "        MilesPoupart's MagicWrt built on "$(date +%Y.%m.%d)"\n------------------------------------------------------------" >> package/base-files/files/etc/banner
 
 # Test kernel 6.1
-sed -i 's/5.4/6.1/g' ./target/linux/rockchip/Makefile
+# sed -i 's/5.4/6.1/g' ./target/linux/rockchip/Makefile
 rm -rf target/linux/rockchip/image/armv8.mk
 cp -f $GITHUB_WORKSPACE/armv8.mk target/linux/rockchip/image/armv8.mk
 cp -f $GITHUB_WORKSPACE/999-fuck-rockchip-pcie.patch target/linux/rockchip/patches-6.1/999-fuck-rockchip-pcie.patch
