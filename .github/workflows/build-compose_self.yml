@@ -195,7 +195,7 @@ jobs:
         ../$DIY_SH
         if [ "$KERNEL_VER" != "5.4" ]; then
             sed -i "s/5.4/$KERNEL_VER/g" ./target/linux/rockchip/Makefile
-            cat ./target/linux/rockchip/Makefile
+            # cat ./target/linux/rockchip/Makefile
         fi
         ../scripts/preset-clash-core.sh arm64
         ../scripts/preset-terminal-tools.sh
