@@ -129,12 +129,12 @@ jobs:
       if: inputs.task_setting != 'build-only'
       run: |
         df -hT $PWD
-        if ["$REPO_URL" = "https://github.com/coolsnowwolf/lede"]; then
-            REPO_BRANCH = "master"
-        fi
-        echo $REPO_URL
-        echo $REPO_BRANCH
-        git clone $REPO_URL -b $REPO_BRANCH openwrt
+        # if ["$REPO_URL" = "https://github.com/coolsnowwolf/lede"]; then
+        #     REPO_BRANCH = "master"
+        # fi
+        # echo $REPO_URL
+        # echo $REPO_BRANCH
+        git clone $REPO_URL openwrt
         # cd openwrt
         
     # - name: Reset Version
