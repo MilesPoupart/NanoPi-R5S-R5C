@@ -193,8 +193,6 @@ sed -i 's/192.168.1.1/192.168.3.1/g' package/base-files/files/bin/config_generat
 sed -i '/uci commit system/i\uci set system.@system[0].hostname='MagicWrt'' package/lean/default-settings/files/zzz-default-settings
 sed -i "s/OpenWrt /MilesPoupart @ MagicWrt /g" package/lean/default-settings/files/zzz-default-settings
 
-cat $GITHUB_WORKSPACE/xdp-sockets-diag_support.mk >> package/kernel/linux/modules/netsupport.mk
-
 rm package/base-files/files/etc/banner
 touch package/base-files/files/etc/banner
 echo -e "------------------------------------------------------------" >> package/base-files/files/etc/banner
