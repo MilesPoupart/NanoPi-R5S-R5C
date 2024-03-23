@@ -91,10 +91,6 @@ rm -rf ../../customfeeds/packages/utils/v2dat
 rm -rf ../../customfeeds/luci/applications/luci-app-mosdns
 git clone --depth=1 https://github.com/sbwml/luci-app-mosdns
 
-# Add luci-app-adguardhome
-rm -rf ../../customfeeds/packages/net/adguardhome
-# github_partial_clone Lienol openwrt-package other luci-app-adguardhome luci-app-adguardhome
-
 # Add luci-app-passwall
 git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall
 git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall2
