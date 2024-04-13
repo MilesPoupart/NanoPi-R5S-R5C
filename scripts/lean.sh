@@ -28,11 +28,6 @@ function github_partial_clone(){
     rm -rf ${clone_dir}"/"${repository_name}
 }
 
-# 🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧
-
-# rm -rf package/kernel/mac80211/Makefile
-# cp -f $GITHUB_WORKSPACE/Makefile package/kernel/mac80211/Makefile
-
 rm -rf package/base-files/files/lib/preinit/80_mount_root
 wget -P package/base-files/files/lib/preinit https://raw.githubusercontent.com/DHDAXCW/lede-rockchip/stable/package/base-files/files/lib/preinit/80_mount_root 
 # rm -rf package/libs/libnl-tiny
@@ -65,6 +60,14 @@ rm -rf ../../customfeeds/luci/applications/luci-app-ipsec-server
 rm -rf openwrt-package/verysync
 rm -rf openwrt-package/luci-app-verysync
 
+# Add luci-app-irqbalance by QiuSimons https://github.com/QiuSimons/OpenWrt-Add
+github_partial_clone QiuSimons OpenWrt-Add use_default_branch luci-app-irqbalance luci-app-irqbalance
+
+# Add luci-app-passwall
+git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall
+git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall2
+git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall-packages
+
 # Add luci-app-netdata
 rm -rf ../../customfeeds/luci/applications/luci-app-netdata
 git clone --depth=1 https://github.com/sirpdboy/luci-app-netdata
@@ -89,11 +92,6 @@ rm -rf ../../customfeeds/packages/net/mosdns
 rm -rf ../../customfeeds/packages/utils/v2dat
 rm -rf ../../customfeeds/luci/applications/luci-app-mosdns
 git clone --depth=1 https://github.com/sbwml/luci-app-mosdns
-
-# Add luci-app-passwall
-git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall
-git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall2
-git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall-packages
 
 # Add luci-app-ssr-plus
 git clone --depth=1 https://github.com/fw876/helloworld
@@ -221,8 +219,4 @@ echo -e "                 /____/                                     " >> packag
 echo -e "------------------------------------------------------------" >> package/base-files/files/etc/banner
 echo -e "        MilesPoupart's MagicWrt built on "$(date +%Y.%m.%d)"\n------------------------------------------------------------" >> package/base-files/files/etc/banner
 
-# Test kernel 6.1
-# sed -i 's/5.4/6.1/g' ./target/linux/rockchip/Makefile
-# rm -rf target/linux/rockchip/image/armv8.mk
-# cp -f $GITHUB_WORKSPACE/armv8.mk target/linux/rockchip/image/armv8.mk
 cp -f $GITHUB_WORKSPACE/999-fuck-rockchip-pcie.patch target/linux/rockchip/patches-6.1/999-fuck-rockchip-pcie.patch
