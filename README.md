@@ -1,3 +1,6 @@
+# 本项目已迁移至新项目继续更新
+请移步：https://github.com/MilesPoupart/OpenWrt_RockChip
+
 <div align="center">
 <a href="/LICENSE">
     <img src="https://img.shields.io/github/license/MilesPoupart/NanoPi-R5S-R5C?style=flat&a=1" alt="">
